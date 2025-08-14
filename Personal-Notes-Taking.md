@@ -11,5 +11,9 @@ You can skip the @version to get the current latest version.
 If you want to add commit after install, you put `--commit` flag delibrately.
 
 
+### importing imports
 
+Tests: `import {Test} from "forge-std/Test.sol";`
+
+Scripts: `import {Script} from "forge-std/Script.sol";`
 
