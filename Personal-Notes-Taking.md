@@ -53,4 +53,11 @@ Use Chain-list Price Feed Contract Addresses page. Select the network (Etheruem,
 
 https://docs.chain.link/data-feeds/price-feeds/addresses?page=1&testnetPage=1
 
+### Position matters for VM.BROADCAST
+
+Anything above vm.broadcast(): Will be running in the simulated environment
+Anything after vm.broadcast(): Will be a part of txn and will cost the gas on chain.
+
+
+
 
