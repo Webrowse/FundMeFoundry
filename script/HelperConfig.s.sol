@@ -7,6 +7,8 @@ import {MockV3Aggregator} from "../test/mock/MockV3Aggregator.sol";
 contract HelperConfig is Script {
     NetworkConfig public activeNetworkConfig;
 
+    uint8 public constant DECIMAL = 8;
+    int256 public constant INITIAL_PRICE = 2000e8;
     constructor() {
         if (block.chainid == 11155111) {
             activeNetworkConfig = getSepoliaEthConfig();
@@ -35,8 +37,15 @@ contract HelperConfig is Script {
     }
 
     function getAnvilEthConfig() public pure returns (NetworkConfig memory) {
+        if (activeNetworkConfig.priceFeed != address(0)) {
+            return activeNetworkConfig;
+        }
+
         vm.startBroadcast();
-        MockV3Aggregator mockv3Aggregator = new MockV3Aggregator(8, 2000e8);
+        MockV3Aggregator mockv3Aggregator = new MockV3Aggregator(
+            DECIMAL,
+            INITIAL_PRICE
+        );
 
         vm.stopBroadcast();
 
