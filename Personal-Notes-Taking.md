@@ -59,5 +59,21 @@ Anything above vm.broadcast(): Will be running in the simulated environment
 Anything after vm.broadcast(): Will be a part of txn and will cost the gas on chain.
 
 
+### Cheatcodes from Foundry Book
 
+`vm.Revert()` tells that next line is expected to be fail. Equivalent to assert_ne!();
+
+
+### Testing single test
+
+use `--match-test` flag as shown below: 
+`forge test --match-test  testFundFailsWithoutEnoughEth`
+
+## making gas efficient
+
+Make variables private
+
+and make another view / pure function with external visibility to export, 
+
+It saves Gas..!!
 

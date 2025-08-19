@@ -29,4 +29,15 @@ contract FundMeTest is Test {
 
         assertEq(version, 6);
     }
+
+    function testFundFailsWithoutEnoughEth() public {
+        vm.expectRevert();
+        fundMe.fund();
+    }
+
+    function testFundUpdatesFundedDataStructures() public {
+        fundMe.fund{value: 10e18}();
+        uint256 amountFunded = fundMe.getAddressToAmountFunded(address(this));
+        assertEq(amountFunded, 10e18);
+    }
 }
