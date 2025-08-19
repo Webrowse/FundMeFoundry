@@ -1,111 +1,110 @@
-## installing the import
+# Foundry + Chainlink Notes
 
-`forge install smartcontractkit/chainlink-brownie-contracts@1.3.0`
+## Installing Imports
+forge install smartcontractkit/chainlink-brownie-contracts@1.3.0  
+- @version can be skipped to always pull the latest  
+- --no-commit is now default (deprecated flag)  
+- If you want to commit after installing, explicitly add --commit  
 
-You can skip the @version to get the current latest version.
+---
 
-@ to add the specific releave version (1.3.0 is the latest rn)
+## Importing Files
+Tests: import {Test} from "forge-std/Test.sol";  
+Scripts: import {Script} from "forge-std/Script.sol";  
+Contracts:  
+import {XYZ} from "../src/SmartContract.sol";  
+contract ABC is XYZ {}  
 
-`--no-commit` flag as been depreciated, Now it is implemented by default.
+---
 
-If you want to add commit after install, you put `--commit` flag delibrately.
+## Compile Command
+forge script script/DeployFundMe.s.sol  
+- Add flags as needed: --rpc-url, --private-key, etc  
 
+---
 
-## importing imports
+## Testing with External Data
+- Get Sepolia RPC URL (e.g., from Alchemy)  
+- Store in .env and load with: source .env  
+- Run test:  
+forge test --fork-url $SEPOLIA_RPC_URL -vvv --match-test testPriceFeedVersionIsAccurate  
 
-Tests: `import {Test} from "forge-std/Test.sol";`
+---
 
-Scripts: `import {Script} from "forge-std/Script.sol";`
+## Code Coverage
+forge coverage --fork-url $SEPOLIA_RPC_URL  
 
-## how to include the imports in the contract?
+---
 
-import {xyz} from "../src/smartContract.sol";
-contract abc is xyz {}
+## Multi-Chain Deployment
+- Avoid hardcoding addresses. Pass them during initialization  
+- Get addresses from Chainlink registry:  
+https://docs.chain.link/data-feeds/price-feeds/addresses?page=1&testnetPage=1  
 
-## Compile command?
+---
 
-`forge script script/DeployFundMe.s.sol`
+## VM.broadcast()
+- Code before vm.broadcast() runs in simulated environment  
+- Code after vm.broadcast() is sent as a real transaction (consumes gas)  
 
-we can use various flags with it according to need, such as --rpc-url, --private-key, etc
+---
 
+## Cheatcodes (Foundry)
+vm.expectRevert(); → expects next line to fail  
+- Ignores vm.prank(...)  
 
-## test the code that requires outside data
+Prank (fake address):  
+address USER = makeAddr("user");  
+vm.deal(USER, START_FUND); // Give balance to USER  
 
-getting Sepolia RPC url from Alchemy.
+START_FUND can be set as uint256 START_FUND = 10e18;  
 
-Pinning it to .env file and extracting it to terminal using `source .env`.
+Simulate gas price: txGasPrice  
 
-run `forge test --fork-url $SEPOLIA_RPC_URL -vvv --match-test testPriceFeedVersionIsAccurate`
+---
 
-## to check how much code has been into the testing 
+## Running Specific Tests
+forge test --match-test testFundFailsWithoutEnoughEth  
 
-`forge coverage --fork-url $SEPOLIA_RPC_URL`
+---
 
-it will give you a table of files with percentages of how much lines out of total have been to test file.
+## Gas Efficiency
+- Make state variables private  
+- Expose them with external view/pure functions  
+- Saves gas  
 
-## Make FundMe for multiple chains
+---
 
-Not hard coding the Address, instead passing it during initialising it.
+## Test Lifecycle
+Each test runs with a fresh setup:  
+setUp() → testA()  
+setUp() → testB()  
 
-### How to get addresses? 
+Pattern: Arrange → Act → Assert  
 
-Use Chain-list Price Feed Contract Addresses page. Select the network (Etheruem, ZKSync, Solana, Polygon, etc).
+---
 
-https://docs.chain.link/data-feeds/price-feeds/addresses?page=1&testnetPage=1
+## Gas in Local Tests
+- Local environment defaults to gas price = 0  
+- Measure gas usage:  
+forge snapshot --match-test testWithdrawFromMultipleFunders  
 
-### Position matters for VM.BROADCAST
+Built-ins:  
+gasleft() → remaining gas  
+tx.gasprice → current gas price  
 
-Anything above vm.broadcast(): Will be running in the simulated environment
-Anything after vm.broadcast(): Will be a part of txn and will cost the gas on chain.
+---
 
+## Storage & Memory
+Inspect storage layout:  
+forge inspect FundMe storageLayout  
 
-## Cheatcodes from Foundry Book
+Constants are stored directly in bytecode  
 
-`vm.expectRevert()` tells that next line is expected to be fail. Equivalent to assert_ne!();
+Check storage slot data:  
+cast storage <contract_address> <slot_number>  
 
-`vm.expectRevert()` works on next line, but ignores `vm.prank(abc)`
+Example:  
+cast storage 0x0002322ws2232kbe2 2  
 
-
-
-### PRANK 
-
-This is how you make fake addresses for testing purposes:
-`address USER = makeAddr("user");`
-
-To give a fake balance to the address (mostly fake): 
-
-Inside setUp() in test file: `vm.deal(USER, START_FUND)`
-
-where user is USER made by "user" label,
-
-where START_FUND is another uint256 variable set to 10e18.
-
-### Testing single test
-
-use `--match-test` flag as shown below: 
-`forge test --match-test  testFundFailsWithoutEnoughEth`
-
-## making gas efficient
-
-Make variables private
-
-and make another view / pure function with external visibility to export, 
-
-It saves Gas..!!
-
-## Test Info
-
-step 1: setUp()
-
-step 2: testA()
-
-step 3: setUp()
-
-step 4: testB()
-
-It always init the whole instance to start every test.
-
---- 
-
-TEST HAS 3 PHASES: ARRANGE, ACT, ASSERT
-
+If slot not given, defaults to fetching from Etherscan  
