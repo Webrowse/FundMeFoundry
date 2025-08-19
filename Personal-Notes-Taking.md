@@ -59,10 +59,24 @@ Anything above vm.broadcast(): Will be running in the simulated environment
 Anything after vm.broadcast(): Will be a part of txn and will cost the gas on chain.
 
 
-### Cheatcodes from Foundry Book
+## Cheatcodes from Foundry Book
+
+### PRANK 
+
 
 `vm.Revert()` tells that next line is expected to be fail. Equivalent to assert_ne!();
 
+
+This is how you make fake addresses for testing purposes:
+`address USER = makeAddr("user");`
+
+To give a fake balance to the address (mostly fake): 
+
+Inside setUp() in test file: `vm.deal(USER, START_FUND)`
+
+where user is USER made by "user" label,
+
+where START_FUND is another uint256 variable set to 10e18.
 
 ### Testing single test
 
