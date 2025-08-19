@@ -61,11 +61,13 @@ Anything after vm.broadcast(): Will be a part of txn and will cost the gas on ch
 
 ## Cheatcodes from Foundry Book
 
+`vm.expectRevert()` tells that next line is expected to be fail. Equivalent to assert_ne!();
+
+`vm.expectRevert()` works on next line, but ignores `vm.prank(abc)`
+
+
+
 ### PRANK 
-
-
-`vm.Revert()` tells that next line is expected to be fail. Equivalent to assert_ne!();
-
 
 This is how you make fake addresses for testing purposes:
 `address USER = makeAddr("user");`
@@ -90,4 +92,20 @@ Make variables private
 and make another view / pure function with external visibility to export, 
 
 It saves Gas..!!
+
+## Test Info
+
+step 1: setUp()
+
+step 2: testA()
+
+step 3: setUp()
+
+step 4: testB()
+
+It always init the whole instance to start every test.
+
+--- 
+
+TEST HAS 3 PHASES: ARRANGE, ACT, ASSERT
 

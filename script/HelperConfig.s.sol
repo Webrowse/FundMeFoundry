@@ -9,6 +9,7 @@ contract HelperConfig is Script {
 
     uint8 public constant DECIMAL = 8;
     int256 public constant INITIAL_PRICE = 2000e8;
+
     constructor() {
         if (block.chainid == 11155111) {
             activeNetworkConfig = getSepoliaEthConfig();
@@ -24,15 +25,12 @@ contract HelperConfig is Script {
     }
 
     function getSepoliaEthConfig() public pure returns (NetworkConfig memory) {
-        NetworkConfig memory sepoliaConfig = NetworkConfig({
-            priceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306
-        });
+        NetworkConfig memory sepoliaConfig = NetworkConfig({priceFeed: 0x694AA1769357215DE4FAC081bf1f309aDC325306});
         return sepoliaConfig;
     }
+
     function getMainnetEthConfig() public pure returns (NetworkConfig memory) {
-        NetworkConfig memory ethMainnetConfig = NetworkConfig({
-            priceFeed: 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419
-        });
+        NetworkConfig memory ethMainnetConfig = NetworkConfig({priceFeed: 0x5f4eC3Df9cbd43714FE2740f5E3616155c5b8419});
         return ethMainnetConfig;
     }
 
@@ -42,16 +40,11 @@ contract HelperConfig is Script {
         }
 
         vm.startBroadcast();
-        MockV3Aggregator mockv3Aggregator = new MockV3Aggregator(
-            DECIMAL,
-            INITIAL_PRICE
-        );
+        MockV3Aggregator mockv3Aggregator = new MockV3Aggregator(DECIMAL, INITIAL_PRICE);
 
         vm.stopBroadcast();
 
-        NetworkConfig memory anvilConfig = NetworkConfig({
-            priceFeed: address(mockv3Aggregator)
-        });
+        NetworkConfig memory anvilConfig = NetworkConfig({priceFeed: address(mockv3Aggregator)});
         return anvilConfig;
     }
 }
