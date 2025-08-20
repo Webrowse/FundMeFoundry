@@ -112,3 +112,19 @@ Example:
 cast storage 0x0002322ws2232kbe2 2  
 
 If slot not given, defaults to fetching from Etherscan  
+
+## Install 'Make' 
+
+to encode long commands into small shortcuts.
+
+syntax - If you have to write it in single line `CCommand:; long-script-command`
+
+or if not in same line
+
+```Make
+CCommand: 
+    long-script-command 
+```
+Making distiction - indentation should be with tab and not space.
+
+If the command has .env variables, You write them wrapped with $(): `--rpc-url \$(SEPOLIA_RPC_URL)`
