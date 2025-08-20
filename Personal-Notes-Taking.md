@@ -1,19 +1,23 @@
 # Foundry + Chainlink Notes
 
 ## Installing Imports
-forge install smartcontractkit/chainlink-brownie-contracts@1.3.0  
+`forge install smartcontractkit/chainlink-brownie-contracts@1.3.0`
 - @version can be skipped to always pull the latest  
-- --no-commit is now default (deprecated flag)  
-- If you want to commit after installing, explicitly add --commit  
+- `--no-commit` is now default (deprecated flag)  
+- If you want to commit after installing, explicitly add `--commit` 
 
 ---
 
 ## Importing Files
-Tests: import {Test} from "forge-std/Test.sol";  
-Scripts: import {Script} from "forge-std/Script.sol";  
+Tests: `import {Test} from "forge-std/Test.sol";`
+
+Scripts: `import {Script} from "forge-std/Script.sol";`
+
 Contracts:  
+```
 import {XYZ} from "../src/SmartContract.sol";  
 contract ABC is XYZ {}  
+```
 
 ---
 
